@@ -1,11 +1,4 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
-
+AdminUser.create_with(password: '123456789', password_confirmation: '123456789').find_or_create_by(email: 'abdulkhaliqdev@gmail.com')
 
 if Doorkeeper::Application.count.zero?
   Doorkeeper::Application.create(name: "web client", redirect_uri: "", scopes: "")
