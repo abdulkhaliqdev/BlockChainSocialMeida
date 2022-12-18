@@ -30,8 +30,20 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 # Authentication
 gem 'devise', '~> 4.7.3'
+
 # Client Authentication
 gem 'doorkeeper', '~> 5.4.0'
+
+# Tailwindcss for style
+gem "tailwindcss-rails", "~> 2.0"
+
+# Admin Dashboard
+gem "activeadmin", "~> 2.13"
+gem 'activeadmin_addons', '~> 1.9'
+gem 'active_material', '~> 1.5'
+
+
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -59,3 +71,4 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
