@@ -14,7 +14,24 @@ Doorkeeper.configure do
   # end
 
   resource_owner_from_credentials do |_routes|
-    User.authenticate(params[:email], params[:password])
+    msg = if params[:email].blank? 
+            'Email or phone number can not be blank.'
+          elsif params[:password].blank?
+            'Password can not be blank.'
+          end
+    
+    raise Doorkeeper::Errors::DoorkeeperError, msg if msg.present?
+    user = User.find_for_database_authentication(email: params[:email])
+    msg  = 'Invalid email or User not found.' if user.blank?
+    raise Doorkeeper::Errors::DoorkeeperError, msg if msg.present?
+
+    if user&.valid_for_authentication? { user.valid_password?(params[:password]) } && user&.active_for_authentication?
+      request.env['warden'].set_user(user, scope: :user, store: false)
+      user
+    else
+      msg = 'Wrong password. Please try again.'
+      raise Doorkeeper::Errors::DoorkeeperError, msg
+    end
   end
 
   grant_flows %w[password]
@@ -501,3 +518,5 @@ Doorkeeper.configure do
   #
   # realm "Doorkeeper"
 end
+
+Doorkeeper::OAuth::TokenResponse.send :prepend, CustomTokenResponse
