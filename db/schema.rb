@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_18_222548) do
+ActiveRecord::Schema.define(version: 2023_01_22_213931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,37 @@ ActiveRecord::Schema.define(version: 2022_12_18_222548) do
     t.text "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "likes_count", default: 0, null: false
+    t.integer "comments_count", default: 0, null: false
+    t.integer "user_id"
+    t.text "image_data"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "blogs_id"
+    t.string "message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["blogs_id"], name: "index_comments_on_blogs_id"
+  end
+
+  create_table "followships", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "following_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["follower_id", "following_id"], name: "index_followships_on_follower_id_and_following_id", unique: true
+    t.index ["follower_id"], name: "index_followships_on_follower_id"
+    t.index ["following_id"], name: "index_followships_on_following_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "users_id"
+    t.bigint "blogs_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["blogs_id"], name: "index_likes_on_blogs_id"
+    t.index ["users_id"], name: "index_likes_on_users_id"
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -84,9 +115,21 @@ ActiveRecord::Schema.define(version: 2022_12_18_222548) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "username"
+    t.string "followers"
+    t.string "followings"
+    t.text "description"
+    t.string "city"
+    t.text "from"
+    t.text "relationship"
+    t.integer "blog_count", default: 0, null: false
+    t.integer "followships_count", default: 0, null: false
+    t.integer "likes_count", default: 0, null: false
+    t.text "profile_data"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "blogs", "users"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
 end

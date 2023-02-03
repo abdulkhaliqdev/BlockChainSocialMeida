@@ -43,8 +43,6 @@ gem 'activeadmin_addons', '~> 1.9'
 gem 'active_material', '~> 1.5'
 
 
-
-
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'pry'
@@ -72,3 +70,8 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+
+gem "shrine", "~> 3.4"
+gem "image_processing", "~> 1.12"
+
+gem "active_model_serializers", "~> 0.10.13"

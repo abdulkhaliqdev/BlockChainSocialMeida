@@ -16,3 +16,7 @@
 
  @import url('./blogs.scss');
  @import url('./home.scss');
+
+ .thumb_image {
+  width: 20px !important;
+}
