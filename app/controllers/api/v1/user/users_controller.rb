@@ -36,6 +36,22 @@ class Api::V1::User::UsersController < Api::BaseController
 	  end
 	end
 
+	def follow
+		if current_user.followees << @user 
+			render json: true
+		else
+			render json: false
+		end
+	end
+	
+	def unfollow
+		if current_user.followed_users.find_by(followee_id: @user.id).destroy 
+			render json: true
+		else
+			render json: false
+		end
+	end
+
 	private
 
 	def user_params
@@ -44,8 +60,6 @@ class Api::V1::User::UsersController < Api::BaseController
 
 	def generate_refresh_token
 	  loop do
-	    # generate a random token string and return it, 
-	    # unless there is already another token with the same string
 	    token = SecureRandom.hex(32)
 	    break token unless Doorkeeper::AccessToken.exists?(refresh_token: token)
 	  end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_22_213931) do
+ActiveRecord::Schema.define(version: 2023_02_04_083529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,7 +57,9 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.string "message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "users_id", null: false
     t.index ["blogs_id"], name: "index_comments_on_blogs_id"
+    t.index ["users_id"], name: "index_comments_on_users_id"
   end
 
   create_table "followships", force: :cascade do |t|
@@ -70,13 +72,22 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.index ["following_id"], name: "index_followships_on_following_id"
   end
 
-  create_table "likes", force: :cascade do |t|
-    t.bigint "users_id"
-    t.bigint "blogs_id"
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "friend_id"
+    t.boolean "confirmed", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["blogs_id"], name: "index_likes_on_blogs_id"
-    t.index ["users_id"], name: "index_likes_on_users_id"
+    t.index ["user_id"], name: "index_invitations_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "blog_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["blog_id"], name: "index_likes_on_blog_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -131,5 +142,7 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
   end
 
   add_foreign_key "blogs", "users"
+  add_foreign_key "comments", "users", column: "users_id"
+  add_foreign_key "invitations", "users"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
 end

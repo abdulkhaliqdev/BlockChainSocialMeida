@@ -13,25 +13,17 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       resources :blogs, only: %i[index] do
-        resources :comments, only: %i[index]
+        resources :comments
 
         put '/blog/:id/like', to: 'blogs#like', as: 'like'
       end
       get '/blogs/timeline/:id', to: 'blogs#timeline', as: 'timeline'
 
       namespace :user do
-        resources :users, only: %i[create show] do
-          member do
-            put 'follow'
-            put 'unfollow'
-            get 'profile'
-          end
-          collection do
-            get 'friends'
-            get 'unfollow'
-            get 'follow'
-          end
-        end
+        resources :users, only: %i[create show]
+
+        post '/users/:id/follow', to: "users#follow", as: "follow_user"
+        post '/users/:id/unfollow', to: "users#unfollow", as: "unfollow_user"
       end
     end
   end
