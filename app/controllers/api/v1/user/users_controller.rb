@@ -1,4 +1,5 @@
 class Api::V1::User::UsersController < Api::BaseController
+
 	skip_before_action :doorkeeper_authorize!, only: %i[create]
 
 	def show
@@ -6,34 +7,34 @@ class Api::V1::User::UsersController < Api::BaseController
 	end
 
 	def create
-	  user = User.new(user_params)
-	  client_app = Doorkeeper::Application.find_by(uid: params[:client_id])
+		user = User.new(user_params)
+		client_app = Doorkeeper::Application.find_by(uid: params[:client_id])
 
 		return render(json: { error: 'Invalid client ID'}, status: 403) unless client_app
 
-	  if user.save!
-	    access_token = Doorkeeper::AccessToken.create(
-	      resource_owner_id: user.id,
-	      application_id: client_app.id,
-	      refresh_token: generate_refresh_token,
-	      expires_in: Doorkeeper.configuration.access_token_expires_in.to_i,
-	      scopes: ''
-	    )
+		if user.save!
+			access_token = Doorkeeper::AccessToken.create(
+				resource_owner_id: user.id,
+				application_id: client_app.id,
+				refresh_token: generate_refresh_token,
+				expires_in: Doorkeeper.configuration.access_token_expires_in.to_i,
+				scopes: ''
+			)
 
-	    render(json: {
-	      user: {
-	        id: user.id,
-	        email: user.email,
-	        access_token: access_token.token,
-	        token_type: 'bearer',
-	        expires_in: access_token.expires_in,
-	        refresh_token: access_token.refresh_token,
-	        created_at: access_token.created_at.to_time.to_i
-	      }
-	    })
-	  else
-	    render(json: { error: user.errors.full_messages }, status: 422)
-	  end
+			render(json: {
+				user: {
+					id: user.id,
+					email: user.email,
+					access_token: access_token.token,
+					token_type: 'bearer',
+					expires_in: access_token.expires_in,
+					refresh_token: access_token.refresh_token,
+					created_at: access_token.created_at.to_time.to_i
+				}
+			})
+		else
+			render(json: { error: user.errors.full_messages }, status: 422)
+		end
 	end
 
 	def follow
@@ -55,7 +56,7 @@ class Api::V1::User::UsersController < Api::BaseController
 	private
 
 	def user_params
-		params.require(:user).permit(:email, :password)
+		params.require(:user).permit(:username, :email, :password, :profile)
 	end
 
 	def generate_refresh_token
