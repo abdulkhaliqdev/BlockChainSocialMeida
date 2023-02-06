@@ -1,6 +1,5 @@
 class Api::V1::PostsController < Api::BaseController
   before_action :find_post, only: [:show, :update, :destroy]
-  before_action :confirm_authentication  
 
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -15,8 +14,10 @@ class Api::V1::PostsController < Api::BaseController
   end
 
   def create
-    collection = Post.create!(post_params)
-    render json: collection, status: :created
+    post = Post.new(post_params)
+    if post.save!
+      render json: post, status: :created
+    end
   end
 
   def update
@@ -36,7 +37,7 @@ class Api::V1::PostsController < Api::BaseController
   end
 
   def post_params
-    params.permit(:body, :image, :user_id)
+    params.require(:post).permit(:body, :image, :user_id)
   end
 
   def render_unprocessable_entity_response(invalid)

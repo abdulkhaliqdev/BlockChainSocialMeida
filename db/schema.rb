@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_06_092224) do
+ActiveRecord::Schema.define(version: 2023_02_06_212803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,15 @@ ActiveRecord::Schema.define(version: 2023_02_06_092224) do
     t.index ["users_id"], name: "index_comments_on_users_id"
   end
 
+  create_table "eth_accounts", force: :cascade do |t|
+    t.string "eth_address"
+    t.string "eth_nonce"
+    t.bigint "users_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["users_id"], name: "index_eth_accounts_on_users_id"
+  end
+
   create_table "followships", force: :cascade do |t|
     t.integer "follower_id"
     t.integer "following_id"
@@ -157,10 +166,10 @@ ActiveRecord::Schema.define(version: 2023_02_06_092224) do
   create_table "posts", force: :cascade do |t|
     t.string "body"
     t.text "image_data"
-    t.bigint "users_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["users_id"], name: "index_posts_on_users_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -204,9 +213,9 @@ ActiveRecord::Schema.define(version: 2023_02_06_092224) do
   add_foreign_key "blogs", "users"
   add_foreign_key "collections", "users", column: "users_id"
   add_foreign_key "comments", "users", column: "users_id"
+  add_foreign_key "eth_accounts", "users", column: "users_id"
   add_foreign_key "invitations", "users"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "posts", "users", column: "users_id"
   add_foreign_key "purchases", "nfts", column: "nfts_id"
   add_foreign_key "purchases", "users", column: "users_id"
 end

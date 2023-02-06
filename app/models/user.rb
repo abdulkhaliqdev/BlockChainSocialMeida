@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_many :purchases
   has_many :nfts, through: :purchases
   has_many :cowries, through: :investments
+  has_many :posts
 
   def follow(user)
     follower << user
