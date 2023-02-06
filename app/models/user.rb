@@ -15,6 +15,12 @@ class User < ApplicationRecord
   has_many :invitations, dependent: :destroy
   has_many :pending_invitations,-> { where(confirmed: false)}, class_name: 'Invitation', foreign_key: 'friend_id'
 
+  has_many :investments
+  has_many :collections
+  has_many :purchases
+  has_many :nfts, through: :purchases
+  has_many :cowries, through: :investments
+
   def follow(user)
     follower << user
   end
