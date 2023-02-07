@@ -1,7 +1,6 @@
-class Api::TutorialsController < ApplicationController
+class Api::V1::TutorialsController < Api::BaseController
   before_action :find_tutorial, only: [:show, :update, :destroy]
   before_action :is_creator?, only: [:update, :destroy]
-
   before_action :authorize_user, only: [:update, :destroy, :create]
 
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response

@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  root 'home#index'
+  root to: "admin/dashboard#index"
 
   use_doorkeeper do
     skip_controllers :authorizations, :applications, :authorized_applications
@@ -20,7 +20,9 @@ Rails.application.routes.draw do
       get '/blogs/timeline/:id', to: 'blogs#timeline', as: 'timeline'
 
       namespace :user do
-        resources :users, only: %i[create show]
+        resources :users, only: %i[create show index]
+
+        get '/users/:id/friends', to: "users#friends"
 
         post '/users/:id/follow', to: "users#follow", as: "follow_user"
         post '/users/:id/unfollow', to: "users#unfollow", as: "unfollow_user"

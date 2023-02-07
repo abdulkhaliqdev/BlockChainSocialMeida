@@ -1,3 +1,3 @@
 class Artwork < ApplicationRecord
-  belongs_to :collections
+  belongs_to :collection
 end

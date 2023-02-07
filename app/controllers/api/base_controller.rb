@@ -3,7 +3,6 @@ class Api::BaseController < ActionController::API
 
   private
 
-  # helper method to access the current user from the token
   def current_user
     @current_user ||= if params[:id]
       User&.find_by(id: params[:id])

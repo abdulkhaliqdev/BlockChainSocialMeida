@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_07_002357) do
+ActiveRecord::Schema.define(version: 2023_02_07_015329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,15 +46,16 @@ ActiveRecord::Schema.define(version: 2023_02_07_002357) do
     t.string "date_created"
     t.string "list_price"
     t.string "owner"
-    t.bigint "collections_id", null: false
-    t.text "img_data"
+    t.bigint "collection_id"
+    t.text "image_data"
+    t.text "img_url"
     t.boolean "for_sale"
     t.string "keywords"
     t.text "img_thumb_data"
     t.string "cloudinary_public_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["collections_id"], name: "index_artworks_on_collections_id"
+    t.index ["collection_id"], name: "index_artworks_on_collection_id"
   end
 
   create_table "blogs", force: :cascade do |t|
@@ -72,12 +73,13 @@ ActiveRecord::Schema.define(version: 2023_02_07_002357) do
   create_table "collections", force: :cascade do |t|
     t.string "title"
     t.string "description"
-    t.bigint "users_id", null: false
-    t.text "collection_img_data"
-    t.string "cloudinary_public_id"
+    t.bigint "user_id"
+    t.text "collection_image_data"
+    t.string "collection_img"
+    t.string "cdy_public_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["users_id"], name: "index_collections_on_users_id"
+    t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -217,13 +219,12 @@ ActiveRecord::Schema.define(version: 2023_02_07_002357) do
     t.integer "followships_count", default: 0, null: false
     t.integer "likes_count", default: 0, null: false
     t.text "profile_data"
+    t.string "profile_image_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "artworks", "collections", column: "collections_id"
   add_foreign_key "blogs", "users"
-  add_foreign_key "collections", "users", column: "users_id"
   add_foreign_key "comments", "users", column: "users_id"
   add_foreign_key "eth_accounts", "users", column: "users_id"
   add_foreign_key "invitations", "users"

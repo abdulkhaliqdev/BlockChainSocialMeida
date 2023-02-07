@@ -2,6 +2,10 @@ class Api::V1::User::UsersController < Api::BaseController
 
 	skip_before_action :doorkeeper_authorize!, only: %i[create]
 
+	def index
+		render json: User.limit(10)
+	end
+
 	def show
 		render json: current_user
 	end
@@ -51,6 +55,10 @@ class Api::V1::User::UsersController < Api::BaseController
 		else
 			render json: false
 		end
+	end
+
+	def friends
+		render json: current_user.friends
 	end
 
 	private
