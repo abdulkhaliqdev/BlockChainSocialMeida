@@ -8,4 +8,6 @@ class BlogsSerializer < ActiveModel::Serializer
   def coverPicture
     object.image_url if object.image_data.present?
   end
+
+  belongs_to :user
 end
