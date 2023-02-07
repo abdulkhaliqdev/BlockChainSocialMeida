@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       resources :collections
       resources :purchases
       resources :posts
+      resources :tutorials
     end
   end
 end

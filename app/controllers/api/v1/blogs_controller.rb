@@ -5,7 +5,7 @@ class Api::V1::BlogsController < Api::BaseController
   end
 
   def timeline
-    render json: Blog.all
+    render json: timeline_post
   end
 
   def like
@@ -22,5 +22,11 @@ class Api::V1::BlogsController < Api::BaseController
 
   def blog
     @blog ||= Blog.find_by_id(params[:id])
+  end
+
+  def timeline_post
+    post = Post.last
+
+    (Post.last(1).push((Post.last(Post.all.size - 1)).push(Blog.last(Blog.all.size)).shuffle).flatten).flatten
   end
 end

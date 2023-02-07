@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_06_212803) do
+ActiveRecord::Schema.define(version: 2023_02_07_002357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,6 +186,18 @@ ActiveRecord::Schema.define(version: 2023_02_06_212803) do
     t.index ["users_id"], name: "index_purchases_on_users_id"
   end
 
+  create_table "tutorials", force: :cascade do |t|
+    t.string "title"
+    t.string "topic"
+    t.string "video_url"
+    t.string "description"
+    t.bigint "user_id", null: false
+    t.string "cdy_public_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_tutorials_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -218,4 +230,5 @@ ActiveRecord::Schema.define(version: 2023_02_06_212803) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "purchases", "nfts", column: "nfts_id"
   add_foreign_key "purchases", "users", column: "users_id"
+  add_foreign_key "tutorials", "users"
 end
