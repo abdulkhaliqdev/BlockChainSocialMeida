@@ -4,6 +4,6 @@ class UserSerializer < ActiveModel::Serializer
   attribute :description, key: :desc
 
   def profilePicture
-    object.profile_url if object.profile_data.present?
+    object.profile_data ? object.profile_url : object.profile_image_url 
   end
 end

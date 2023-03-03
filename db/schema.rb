@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_22_213931) do
+ActiveRecord::Schema.define(version: 2023_02_07_015329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,23 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "artworks", force: :cascade do |t|
+    t.string "title"
+    t.string "date_created"
+    t.string "list_price"
+    t.string "owner"
+    t.bigint "collection_id"
+    t.text "image_data"
+    t.text "img_url"
+    t.boolean "for_sale"
+    t.string "keywords"
+    t.text "img_thumb_data"
+    t.string "cloudinary_public_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["collection_id"], name: "index_artworks_on_collection_id"
+  end
+
   create_table "blogs", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -50,14 +67,38 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.integer "comments_count", default: 0, null: false
     t.integer "user_id"
     t.text "image_data"
+    t.datetime "published_at"
+  end
+
+  create_table "collections", force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.bigint "user_id"
+    t.text "collection_image_data"
+    t.string "collection_img"
+    t.string "cdy_public_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
-    t.bigint "blogs_id"
+    t.bigint "blog_id"
     t.string "message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["blogs_id"], name: "index_comments_on_blogs_id"
+    t.bigint "users_id", null: false
+    t.index ["blog_id"], name: "index_comments_on_blog_id"
+    t.index ["users_id"], name: "index_comments_on_users_id"
+  end
+
+  create_table "eth_accounts", force: :cascade do |t|
+    t.string "eth_address"
+    t.string "eth_nonce"
+    t.bigint "users_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["users_id"], name: "index_eth_accounts_on_users_id"
   end
 
   create_table "followships", force: :cascade do |t|
@@ -70,13 +111,30 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.index ["following_id"], name: "index_followships_on_following_id"
   end
 
-  create_table "likes", force: :cascade do |t|
-    t.bigint "users_id"
-    t.bigint "blogs_id"
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "friend_id"
+    t.boolean "confirmed", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["blogs_id"], name: "index_likes_on_blogs_id"
-    t.index ["users_id"], name: "index_likes_on_users_id"
+    t.index ["user_id"], name: "index_invitations_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "blog_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["blog_id"], name: "index_likes_on_blog_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "nfts", force: :cascade do |t|
+    t.integer "token_id"
+    t.text "image_data"
+    t.integer "cloudary_public_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -107,6 +165,41 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "posts", force: :cascade do |t|
+    t.string "body"
+    t.text "image_data"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.bigint "nfts_id", null: false
+    t.bigint "users_id", null: false
+    t.integer "price"
+    t.integer "royalty_percentage"
+    t.text "image_thumbnail_data"
+    t.string "description"
+    t.string "cloudinary_public_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["nfts_id"], name: "index_purchases_on_nfts_id"
+    t.index ["users_id"], name: "index_purchases_on_users_id"
+  end
+
+  create_table "tutorials", force: :cascade do |t|
+    t.string "title"
+    t.string "topic"
+    t.string "video_url"
+    t.string "description"
+    t.bigint "user_id", null: false
+    t.string "cdy_public_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_tutorials_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -126,10 +219,17 @@ ActiveRecord::Schema.define(version: 2023_01_22_213931) do
     t.integer "followships_count", default: 0, null: false
     t.integer "likes_count", default: 0, null: false
     t.text "profile_data"
+    t.string "profile_image_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "blogs", "users"
+  add_foreign_key "comments", "users", column: "users_id"
+  add_foreign_key "eth_accounts", "users", column: "users_id"
+  add_foreign_key "invitations", "users"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "purchases", "nfts", column: "nfts_id"
+  add_foreign_key "purchases", "users", column: "users_id"
+  add_foreign_key "tutorials", "users"
 end

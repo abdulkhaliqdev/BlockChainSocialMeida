@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nfts: one
+  users: one
+  price: 1
+  royalty_percentage: 1
+  image_thumbnail_data: MyText
+  description: MyString
+  cloudinary_public_id: MyString
+
+two:
+  nfts: two
+  users: two
+  price: 1
+  royalty_percentage: 1
+  image_thumbnail_data: MyText
+  description: MyString
+  cloudinary_public_id: MyString
